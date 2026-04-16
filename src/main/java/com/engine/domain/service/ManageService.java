@@ -4,23 +4,23 @@ import com.engine.aplication.port.input.ManageServiceUseCase;
 import com.engine.aplication.port.output.ManageServiceRepositoryPort;
 import com.engine.domain.exception.Exception;
 import com.engine.domain.model.ManagedService;
-import com.engine.infrastructure.adapter.output.presistence.ManageServiceRepositoryImpl;
+import com.engine.infrastructure.adapter.output.presistence.ManageServicePersistenceAdapter;
 import lombok.RequiredArgsConstructor;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
-
-import java.util.List;
 
 @Service
 @RequiredArgsConstructor
 public class ManageService implements ManageServiceUseCase {
 
     private final ManageServiceRepositoryPort repository;
-    private final ManageServiceRepositoryImpl repositoryImpl;
+    private final ManageServicePersistenceAdapter persistenceAdapter;
 
     @Override
-    public List<ManagedService> getAllServices() {
-        return repository.findAll();
+    public Page<ManagedService> getAllServices(Pageable pageable) {
+        return repository.findAll(pageable);
     }
 
     @Override
@@ -32,10 +32,10 @@ public class ManageService implements ManageServiceUseCase {
     @Override
     @Transactional
     public ManagedService createService(ManagedService service) {
-        if (repositoryImpl.existsByNameIgnoreCase(service.getName())) {
+        if (persistenceAdapter.existsByNameIgnoreCase(service.getName())) {
             throw new Exception.ServiceNameAlreadyExistsException(service.getName());
         }
-        if (repositoryImpl.existsByIpAddressAndPort(service.getIpAddress(), service.getPort())) {
+        if (persistenceAdapter.existsByIpAddressAndPort(service.getIpAddress(), service.getPort())) {
             throw new Exception.ServiceAddressAlreadyExistsException(service.getIpAddress(), service.getPort());
         }
         return repository.save(service);
@@ -45,10 +45,10 @@ public class ManageService implements ManageServiceUseCase {
     @Transactional
     public ManagedService updateService(Long id, ManagedService updated) {
         ManagedService existing = getServiceById(id);
-        existing.setName(updated.getName());
-        existing.setIpAddress(updated.getIpAddress());
-        existing.setPort(updated.getPort());
-        existing.setDescription(updated.getDescription());
+        if (updated.getName() != null) existing.setName(updated.getName());
+        if (updated.getIpAddress() != null) existing.setIpAddress(updated.getIpAddress());
+        if (updated.getPort() != null) existing.setPort(updated.getPort());
+        if (updated.getDescription() != null) existing.setDescription(updated.getDescription());
         return repository.save(existing);
     }
 

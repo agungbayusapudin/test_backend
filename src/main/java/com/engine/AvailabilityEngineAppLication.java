@@ -1,10 +1,8 @@
 package com.engine;
 
-
-import os.springframework.boot.SpringApplication;
+import org.springframework.boot.SpringApplication;
 import org.springframework.boot.autoconfigure.SpringBootApplication;
-import org.springframework.annotation.EnableScheduling;
-
+import org.springframework.scheduling.annotation.EnableScheduling;
 
 @SpringBootApplication
 @EnableScheduling

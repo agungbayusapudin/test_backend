@@ -2,6 +2,7 @@ package com.engine.infrastructure.adapter.input.rest;
 
 import com.engine.aplication.port.input.ManageServiceUseCase;
 import com.engine.infrastructure.adapter.input.rest.dto.ManageServiceDTO;
+import com.engine.infrastructure.adapter.input.rest.dto.PagedResponse;
 import io.swagger.v3.oas.annotations.Operation;
 import io.swagger.v3.oas.annotations.Parameter;
 import io.swagger.v3.oas.annotations.media.Content;
@@ -11,12 +12,11 @@ import io.swagger.v3.oas.annotations.responses.ApiResponses;
 import io.swagger.v3.oas.annotations.security.SecurityRequirement;
 import io.swagger.v3.oas.annotations.tags.Tag;
 import lombok.RequiredArgsConstructor;
+import org.springframework.data.domain.PageRequest;
+import org.springframework.data.domain.Sort;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
-
-import java.util.List;
-import java.util.stream.Collectors;
 
 @RestController
 @RequestMapping("/api/services")
@@ -26,14 +26,16 @@ public class ManageServiceController {
 
     private final ManageServiceUseCase serviceUseCase;
 
-    @Operation(summary = "Get all services", description = "Retrieve list of all registered services")
+    @Operation(summary = "Get all services", description = "Retrieve paginated list of all registered services")
     @ApiResponse(responseCode = "200", description = "List of services retrieved successfully")
     @GetMapping
-    public ResponseEntity<List<ManageServiceDTO.Response>> getAllServices() {
+    public ResponseEntity<PagedResponse<ManageServiceDTO.Response>> getAllServices(
+            @Parameter(description = "Page number (1-based)") @RequestParam(defaultValue = "1") int page,
+            @Parameter(description = "Items per page") @RequestParam(defaultValue = "10") int limit) {
+
+        PageRequest pageable = PageRequest.of(page - 1, limit, Sort.by(Sort.Direction.DESC, "createdAt"));
         return ResponseEntity.ok(
-                serviceUseCase.getAllServices().stream()
-                        .map(ManageServiceDTO.Response::fromDomain)
-                        .collect(Collectors.toList())
+                PagedResponse.of(serviceUseCase.getAllServices(pageable), ManageServiceDTO.Response::fromDomain)
         );
     }
 

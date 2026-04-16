@@ -1,9 +1,10 @@
 package com.engine.aplication.port.input;
 
-import com.engine.domain.model.HeathCheckHisotry;
-import java.util.List;
+import com.engine.domain.model.HealthCheckHistory;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.Pageable;
 
 public interface HealthCheckUseCase {
-    List<HeathCheckHisotry> getHealthCheckHistory(Long serviceId);
+    Page<HealthCheckHistory> getHealthCheckHistory(Long serviceId, Pageable pageable);
     void checkAllServicesHealth();
 }

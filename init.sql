@@ -1,3 +1,5 @@
+CREATE DATABASE IF NOT EXISTS availability_db;
+
 -- Create managed_services table
 CREATE TABLE IF NOT EXISTS managed_services (
     id BIGSERIAL PRIMARY KEY,

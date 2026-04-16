@@ -3,20 +3,21 @@ package com.engine.infrastructure.adapter.output.presistence;
 import com.engine.aplication.port.output.ManageServiceRepositoryPort;
 import com.engine.domain.model.ManagedService;
 import lombok.RequiredArgsConstructor;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Component;
 
-import java.util.List;
 import java.util.Optional;
 
 @Component
 @RequiredArgsConstructor
-public class ManageServiceRepositoryImpl implements ManageServiceRepositoryPort {
+public class ManageServicePersistenceAdapter implements ManageServiceRepositoryPort {
 
     private final ManageServiceRepository repository;
 
     @Override
-    public List<ManagedService> findAll() {
-        return repository.findAll();
+    public Page<ManagedService> findAll(Pageable pageable) {
+        return repository.findAll(pageable);
     }
 
     @Override

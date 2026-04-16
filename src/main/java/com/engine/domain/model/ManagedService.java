@@ -7,6 +7,7 @@ import lombok.Data;
 import lombok.NoArgsConstructor;
 
 import java.time.LocalDateTime;
+import java.util.List;
 
 @Entity
 @Table(name = "managed_services")
@@ -43,6 +44,10 @@ public class ManagedService {
 
     @Column(name = "updated_at")
     private LocalDateTime updatedAt;
+
+    @OneToMany(mappedBy = "service", cascade = CascadeType.ALL, orphanRemoval = true)
+    @Builder.Default
+    private List<HealthCheckHistory> healthCheckHistories = new java.util.ArrayList<>();
 
     @PrePersist
     protected void onCreate() {

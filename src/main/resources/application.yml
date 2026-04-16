@@ -1,38 +1,41 @@
 spring:
-  aplication:
-    name: availability-engine
+  application:
+    name: ${SPRING_APPLICATION_NAME:availability-engine}
   datasource:
-    url: jdbc:postgresql://availability-postgres:5432/availability_db
-    username: postgres
-    password:
+    url: ${SPRING_DATASOURCE_URL:jdbc:postgresql://localhost:5432/availability_db}
+    username: ${SPRING_DATASOURCE_USERNAME:postgres}
+    password: ${SPRING_DATASOURCE_PASSWORD:postgres123}
+    driver-class-name: org.postgresql.Driver
   jpa:
     hibernate:
-      ddl-auto: update
-    database-platform: org.hibernate.dialect.PostgreSQLDialect
+      ddl-auto: ${SPRING_JPA_HIBERNATE_DDL_AUTO:update}
+    database-platform: ${SPRING_JPA_DATABASE_PLATFORM:org.hibernate.dialect.PostgreSQLDialect}
     show-sql: false
 
 server:
-  port: 8080
+  port: ${SERVER_PORT:8080}
 
 management:
   endpoints:
     web:
       exposure:
-        include: health,info, matrics
+        include: ${MANAGEMENT_ENDPOINTS_WEB_EXPOSURE_INCLUDE:health,info,metrics}
   endpoint:
     health:
-      show-details: always
+      show-details: ${MANAGEMENT_ENDPOINT_HEALTH_SHOW_DETAILS:always}
 
 springdoc:
   swagger-ui:
-    enabled: true
-    path: /swagger-ui.html
+    enabled: ${SPRINGDOC_SWAGGER_UI_ENABLED:true}
+    path: ${SPRINGDOC_SWAGGER_UI_PATH:/swagger-ui.html}
 
 app:
   security:
     api-key: ${APP_SECURITY_API_KEY:test-api-key-12345}
     enabled: ${APP_SECURITY_ENABLED:true}
   scheduler:
-    enabled: true
-    interval-seconds: 60
-    timeout-seconds: 5
+    enabled: ${APP_SCHEDULER_ENABLED:true}
+    interval-seconds: ${APP_SCHEDULER_INTERVAL_SECONDS:60}
+    timeout-seconds: ${APP_SCHEDULER_TIMEOUT_SECONDS:5}
+  health:
+    check-directory: ${APP_HEALTH_CHECK_DIRECTORY:/tmp/health_checks}
