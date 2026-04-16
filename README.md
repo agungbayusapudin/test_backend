@@ -106,6 +106,10 @@ src/main/java/com/engine/
     └── config/             → Security, Swagger, Actuator custom indicator
 ```
 
+### Gambar Arsitektur
+
+![aristektur_images.jpg](images/aristektur_images.jpg)
+
 ### Bagaimana Kompleksitas Ditangani
 
 **1. Health Check Otomatis**
