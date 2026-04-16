@@ -1,0 +1,38 @@
+spring:
+  aplication:
+    name: availability-engine
+  datasource:
+    url: jdbc:postgresql://availability-postgres:5432/availability_db
+    username: postgres
+    password:
+  jpa:
+    hibernate:
+      ddl-auto: update
+    database-platform: org.hibernate.dialect.PostgreSQLDialect
+    show-sql: false
+
+server:
+  port: 8080
+
+management:
+  endpoints:
+    web:
+      exposure:
+        include: health,info, matrics
+  endpoint:
+    health:
+      show-details: always
+
+springdoc:
+  swagger-ui:
+    enabled: true
+    path: /swagger-ui.html
+
+app:
+  security:
+    api-key: ${APP_SECURITY_API_KEY:test-api-key-12345}
+    enabled: ${APP_SECURITY_ENABLED:true}
+  scheduler:
+    enabled: true
+    interval-seconds: 60
+    timeout-seconds: 5
