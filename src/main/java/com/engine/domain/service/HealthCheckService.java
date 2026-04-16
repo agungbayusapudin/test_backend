@@ -35,6 +35,9 @@ public class HealthCheckService implements HealthCheckUseCase {
 
     @Override
     public Page<HealthCheckHistory> getHealthCheckHistory(Long serviceId, Pageable pageable) {
+        if (!serviceRepository.existsById(serviceId)) {
+            throw new com.engine.domain.exception.Exception.ServiceNotFoundException(serviceId);
+        }
         return historyRepository.findByServiceIdOrderByCheckedAtDesc(serviceId, pageable);
     }
 
